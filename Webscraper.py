@@ -71,7 +71,7 @@ class Webscraper:
         return template_list
 
     #Determines whether given textfile's contents matches template
-    def match_template(txt_content, tmp):
+    def match_template(self, txt_content, tmp):
         limit = max(len(txt_content), 50)
         found = False
         i = 0
@@ -80,6 +80,7 @@ class Webscraper:
             match = re.match(tmp, str(txt_content[i]))
             if match:
                 found = True
+            i +=1
         return found
 
     def fn_txt(self, url):
@@ -95,32 +96,16 @@ class Webscraper:
         myfile = urllib.request.urlopen(url)
         data = myfile.readlines()
         for t in self.templates:
-            if (self.match_template(data, t)):
+            if self.match_template(data, t):
                 print('match!')
                 dict_list = []
                 for line in data:
                     match = re.match(t, str(line))
-                    dict_list.append(match.groupdict())
+                    if match:
+                        dict_list.append(match.groupdict())
                 new_df = pd.DataFrame(dict_list)
                 self.data_tables.append(new_df)
-        """
-        dict_list = []
-        #Use regex to extract out the relevant fields. Need to hardcode for different txt files though.
-        for line in data:
-            match = re.match('.*\s(?P<SLNO>[0-9]+)\s(?P<IC>[0-9][0-9][0-9][0-9][0-9][0-9]).*\s'
-                             '(?P<DESC>[A-Z].*[A-Z]).*\s(?P<MQ>[0-9]+[.][0-9][0-9]).*', str(line))
-            if match:
-                new_dict = dict()
-                new_dict['SERIAL.NO'] = match.group('SLNO')
-                new_dict['ITEM_CODE'] = match.group('IC')
-                new_dict['DESCRIPTION'] = match.group('DESC')
-                new_dict['MAX_AMOUNT'] = match.group('MQ')
-                dict_list.append(new_dict)
-        new_df = pd.DataFrame(dict_list)
-        #Here, user can just pass in df instead of new_df for simplicity,  but it won't separate the columns
-        self.data_tables.append(new_df)
-        self.data_tables.append(df)
-        """
+
     def print_txt_url(self):
         print(self.txt_list)
 
