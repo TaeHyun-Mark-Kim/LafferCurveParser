@@ -25,20 +25,34 @@ class Webscraper:
         self.data_tables = []
 
     #For each txt url, create a pandas dataframe
-    def read_txt_files(self):
+    def txt_to_df(self):
         for url in self.txt_list:
             try:
                 self.fn_txt(url)
             except:
                 print("Failed to extract table from " + str(url))
 
-    def scrape_txt_urls(self, urls, count):
-        new_urls = []
-        #Specifies how deep the user wants to navigate the web
-        #Can modify the value '2' to allow narrower/deeper search
-        if count > 2:
+    def url_to_csv(self, depth):
+        self.scrap_txt_url(depth)
+        print('URLs to Process: \n')
+        self.print_txt_url()
+        sample.txt_to_df()
+        sample.print_tables()
+        sample.df_to_csv()
+
+    #Searchs web for txt files with the given depth
+    def scrap_txt_url(self, depth):
+        self.scrap_txt_urls_helper(self.url_list, 0, depth)
+
+    #Recursive helper function for scrap_txt_url
+    def scrap_txt_urls_helper(self, urls, count, limit):
+        if count >= limit:
+            for url in urls:
+                if '.txt' in url or '.TXT' in url:
+                    self.txt_list.append(url)
             return
         else:
+            new_urls = []
             for url in urls:
                 #If the url points to a text file, put it in a list to analyze later
                 if '.txt' in url or '.TXT' in url:
@@ -54,7 +68,7 @@ class Webscraper:
                             new_urls.append(new_url)
                     except:
                         print("Couldn't connect to a link " + str(url))
-        self.scrape_txt_urls(new_urls, count+1)
+                self.scrap_txt_urls_helper(new_urls, count+1, limit)
 
     def generate_templates(self):
         template_list = []
@@ -84,8 +98,7 @@ class Webscraper:
         return found
 
     def fn_txt(self, url):
-
-        print(url)
+        print('Reading ' + url + '...')
         #First, add dataframe with no column separation
         URL_eg = urllib.request.urlopen(url)
         df = pd.read_csv(URL_eg, sep='\t')
@@ -120,7 +133,7 @@ class Webscraper:
         return result
 
     #Converts all datatables into csvfiles
-    def to_csv(self):
+    def df_to_csv(self):
         #Uncomment below block if the user wants to merge all tables from different txt files
         """"
         final_table = self.merge_tables()
@@ -140,8 +153,11 @@ class Webscraper:
 
 
 sample = Webscraper()
-sample.scrape_txt_urls(sample.url_list, 0)
+sample.url_to_csv(depth=1)
+"""
+sample.scrap_txt_url(2)
 sample.print_txt_url()
-sample.read_txt_files()
+sample.txt_to_df()
 sample.print_tables()
-sample.to_csv()
+sample.df_to_csv()
+"""
