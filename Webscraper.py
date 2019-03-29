@@ -92,7 +92,7 @@ class Webscraper:
 
     #Determines whether given textfile's contents matches template
     def match_template(self, txt_content, tmp):
-        limit = max(len(txt_content), 50)
+        limit = min(len(txt_content), 50)
         found = False
         i = 0
         #Check first 50 lines to see if there's a match
