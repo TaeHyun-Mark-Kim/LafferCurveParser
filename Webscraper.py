@@ -105,6 +105,7 @@ class Webscraper:
                         dict_list.append(match.groupdict())
                 new_df = pd.DataFrame(dict_list)
                 self.data_tables.append(new_df)
+                break
 
     def print_txt_url(self):
         print(self.txt_list)
@@ -128,12 +129,12 @@ class Webscraper:
         count = 1
         for t in self.data_tables:
             try:
-                #As more templates are hardcoded, more headers are needed
-                header = ['SERIAL_NO', 'ITEM_CODE', 'DESCRIPTION', 'MAX_AMOUNT']
-                t.to_csv('data' + str(count) + '.csv', columns=header, index=True)
+                if len(t.columns.values) is 0:
+                    t.to_csv('data' + str(count) + '.csv', sep='\t', encoding='utf-8', index=True)
+                else:
+                    t.to_csv('data' + str(count) + '.csv', columns=t.columns.values, index=True)
             except:
-                print('Continuing')
-                t.to_csv('data' + str(count) + '.csv', sep='\t', encoding='utf-8', index=True)
+                print('Failed to convert a dataframe into csv')
             finally:
                 count+=1
 
