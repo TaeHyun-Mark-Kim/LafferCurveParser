@@ -77,8 +77,14 @@ class Webscraper:
         hard-coded and added to the list
         """
         #regex based on http://www.ksbc.kerala.gov.in/circular/prmtrlisthigh1218.txt
-        template1 = '.*\s(?P<SERIAL_NO>[0-9]+)\s(?P<ITEM_CODE>[0-9][0-9][0-9][0-9][0-9][0-9]).*\s(?P<DESCRIPTION>[A-Z].*[A-Z]).*\s(?P<MAX_AMOUNT>[0-9]+[.][0-9][0-9]).*'
+        template1 = ('.*\s(?P<SERIAL_NO>[0-9]+)\s(?P<ITEM_CODE>[0-9][0-9][0-9][0-9][0-9][0-9]).*\s\s'
+        '(?P<DESCRIPTION>[A-Z].*[A-Z])\s.*\s(?P<MAX_AMOUNT>[0-9]+[.][0-9][0-9]).*')
         template_list.append(template1)
+
+        #regex based on http://ksbc.kerala.gov.in/reports/may_june_july/RMCI.TXT
+        template2 = ('.*(?P<Product_Code>[0-9]{9}|[0-9]{8}[A-Z])\s*(?P<Description>[A-Z].*[A-Z])\s.*\s(?P<UOM>[0-9]+)'
+        '\s*(?P<L_Cost>[0-9]+[.][0-9][0-9])\s*(?P<Stock>[0-9]+)\s*(?P<Amount>[0-9]+[.][0-9][0-9]).*')
+        template_list.append(template2)
 
         #User's custom templates...
 
