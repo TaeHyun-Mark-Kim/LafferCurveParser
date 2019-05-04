@@ -32,8 +32,11 @@ for line in data:
 #    print("As expected")
 #print(df.columns.values)
 
-for i in range(10):
-    print(title_list[i])
+#for i in range(10):
+#    print(title_list[i])
+
+for line in title_list:
+    print(line)
 #for i in range(10):
 #    print(dict_list[i])
 #print(len(title_list))

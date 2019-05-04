@@ -163,20 +163,18 @@ class Webscraper:
                     #Check whether the new title is same as one before,
                     #may need to use a hashmap to keep track later on but for now
                     #duplicate titles are contiguous so simpler solution is used
-                    #print(line)
                     new_title = ''
+                    new_date = ''
                     match_dict = title_match.groupdict()
                     for key in match_dict:
                         new_title += match_dict[key] + ' '
-                    #print(new_title)
 
                     if 'DATE' in match_dict:
                         new_date = match_dict['DATE']
 
                     if title != new_title:
                         #Create df and csv of the previous title
-                        #print(dict_list)
-                        #print(title)
+                        print(title)
                         if len(dict_list) > 0:
                             new_df = pd.DataFrame(dict_list)
                             self.data_tables.append(new_df)
@@ -195,7 +193,6 @@ class Webscraper:
                         acc_dict_list.append(match_dict)
 
             #Catch that last csv file!
-            print(title)
             new_df = pd.DataFrame(dict_list)
             self.data_tables.append(new_df)
             self.df_to_csv(new_df, title, True)
@@ -233,7 +230,6 @@ class Webscraper:
             if len(data_table.columns.values) is 0:
                 data_table.to_csv(str(title_final) + '.csv', sep='\t', encoding='utf-8', index=True)
             else:
-                print(data_table.columns.values)
                 data_table.to_csv(str(title_final) + '.csv', columns=data_table.columns.values, index=True)
         except:
                 print('Failed to convert ' + title_final +  ' into csv')
